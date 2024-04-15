@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    function scrollToSection(sectionId) {
+      document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</head>
+<body>
+
+  <div class="header">
+    <h1>AutoMundo: Explora el Universo de los Vehículos</h1>
+  </div>
+
+  <div class="topnav">
+    <div class="button"><a href="vehiculos.html" class="active">Inicio</a></div>
+    <div class="button"><a href="#barcos" onclick="scrollToSection('barcos');">Barcos</a></div>
+    <div class="button"><a href="#lanchas" onclick="scrollToSection('lanchas');">Lanchas</a></div>
+    <div class="button"><a href="vehiculos.html">Vehículos</a></div>
+    <div class="button"><a href="#sobre-nosotros" onclick="scrollToSection('sobre-nosotros');">Sobre Nosotros</a></div>
+  </div>
+
+  <div class="row">
+    <div class="leftcolumn">
+      <div class="card" id="barcos">
+        <h2>Barcos</h2>
+        <h5>Descubre el Mundo de los Barcos</h5>
+        <div class="barco" style="height:200px;"></div>
+        <p>Explora el mundo fascinante de los barcos, desde veleros elegantes hasta poderosos yates, diseñados para llevarte a aventuras en el mar.</p>
+      </div>
+      <div class="card" id="lanchas">
+        <h2>Lanchas</h2>
+        <h5>Experimenta la Emoción de las Lanchas</h5>
+        <div class="lancha" style="height:200px;"></div>
+        <p>Experimenta la velocidad y la emoción de las lanchas, desde pequeñas embarcaciones deportivas hasta lujosos botes de recreo, ideales para disfrutar de días emocionantes en el agua.</p>
+      </div>
+    </div>
+    <div class="rightcolumn">
+      <div class="card" id="sobre-nosotros">
+        <h2>Sobre Nosotros</h2>
+        <div class="logo" style="height:100px;"></div>
+        <p>En AutoMundo, nuestra pasión es proporcionarte información detallada y actualizada sobre una amplia gama de vehículos, incluyendo barcos y lanchas. Desde reseñas de modelos hasta consejos de navegación, estamos aquí para ayudarte a tomar decisiones informadas sobre tu próxima aventura acuática.</p>
+      </div>
+      <div class="card">
+        <h3>Explora Nuestros Artículos</h3>
+        
+        <div class="fakeimg"><p>Artículo sobre Barcos</p></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
