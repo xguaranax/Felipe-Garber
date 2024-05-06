@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="">
-<style>
-
-</style>
+  <style>
+    .error-message {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
 
@@ -22,13 +26,10 @@
   <p>¡Haz una donación hoy y sé parte del viaje hacia un futuro más brillante para todos!</p>
 </div>
 
-
-.</p>
 <div class="row">
   <div class="col-75">
     <div class="container">
-      <form action="/action_page.php">
-      
+      <form id="donation-form" action="/action_page.php">
         <div class="row">
           <div class="col-50">
             <h3>Billing Address</h3>
@@ -40,7 +41,6 @@
             <input type="text" id="adr" name="address" placeholder="542 W. 15th Street">
             <label for="city"><i class="fa fa-institution"></i> City</label>
             <input type="text" id="city" name="city" placeholder="New York">
-
             <div class="row">
               <div class="col-50">
                 <label for="state">State</label>
@@ -52,16 +52,8 @@
               </div>
             </div>
           </div>
-
           <div class="col-50">
             <h3>Payment</h3>
-            <label for="fname">Accepted Cards</label>
-            <div class="icon-container">
-              <i class="fa fa-cc-visa" style="color:navy;"></i>
-              <i class="fa fa-cc-amex" style="color:blue;"></i>
-              <i class="fa fa-cc-mastercard" style="color:red;"></i>
-              <i class="fa fa-cc-discover" style="color:orange;"></i>
-            </div>
             <label for="cname">Name on Card</label>
             <input type="text" id="cname" name="cardname" placeholder="John More Doe">
             <label for="ccnum">Credit card number</label>
@@ -71,7 +63,7 @@
             <div class="row">
               <div class="col-50">
                 <label for="expyear">Exp Year</label>
-                <input type="text" id="expyear" name="expyear" placeholder="2018">
+                <input type="text" id="expyear" name="expyear" placeholder="YYYY">
               </div>
               <div class="col-50">
                 <label for="cvv">CVV</label>
@@ -79,11 +71,11 @@
               </div>
             </div>
           </div>
-          
         </div>
         <label>
-          <input type="checkbox" checked="checked" name="sameadr"> ESTA SEGURO CON LA DONACIÓN
+          <input type="checkbox" id="donation-checkbox" name="sameadr"> ESTA SEGURO CON LA DONACIÓN
         </label>
+        <div id="error-message" class="error-message" style="display: none;"></div>
         <input type="submit" value="Continue to checkout" class="btn">
       </form>
     </div>
@@ -96,12 +88,92 @@
       <p><a href="#">Motor</a> <span class="price">$149.99</span></p>
       <p><a href="#">Turbo</a> <span class="price">$89.99</span></p>
       <p><a href="#">IVA</a> <span class="price">$0,03</p>
-
       <hr>
       <p>Total <span class="price" style="color:black"><b>USD499,99</b></span></p>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    let form = document.getElementById("donation-form");
+    let checkbox = document.getElementById("donation-checkbox");
+    
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      let fname = document.getElementById("fname").value;
+      let email = document.getElementById("email").value;
+      let adr = document.getElementById("adr").value;
+      let city = document.getElementById("city").value;
+      let state = document.getElementById("state").value;
+      let zip = document.getElementById("zip").value;
+      let cname = document.getElementById("cname").value;
+      let ccnum = document.getElementById("ccnum").value;
+      let expmonth = document.getElementById("expmonth").value;
+      let expyear = document.getElementById("expyear").value;
+      let cvv = document.getElementById("cvv").value;
+
+      let errorMessage = document.getElementById("error-message");
+      errorMessage.style.display = "none";
+
+      let letras = /^[A-Za-z]+$/;
+      let numeros = /^[0-9]+$/;
+
+      let expYearInt = parseInt(expyear, 10);
+      if (isNaN(expYearInt) || expyear.length !== 4 || expYearInt <= 2024) {
+        errorMessage.textContent = "La fecha de vencimiento debe ser un año válido (cuatro dígitos) y mayor a 2024.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      if (fname === "" || email === "" || adr === "" || city === "" || state === "" || zip === "" || cname === "" || ccnum === "" || expmonth === "" || expyear === "" || cvv === "" || !checkbox.checked) {
+        errorMessage.textContent = "Por favor, complete todos los campos y marque la casilla 'Esta seguro con la donación'.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      if (!letras.test(fname)) {
+        errorMessage.textContent = "Por favor, ingrese solo letras en el nombre.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      if (!letras.test(cname)) {
+        errorMessage.textContent = "Por favor, ingrese solo letras en el nombre de la tarjeta.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      if (!letras.test(city)) {
+        errorMessage.textContent = "Por favor, ingrese solo letras en la ciudad.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      if (!numeros.test(zip)) {
+        errorMessage.textContent = "Por favor, ingrese solo números para el código postal.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      if (ccnum.length !== 16 || !numeros.test(ccnum)) {
+        errorMessage.textContent = "Por favor, ingrese un número de tarjeta de crédito válido (16 dígitos numéricos).";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      if (cvv.length !== 3 || !numeros.test(cvv)) {
+        errorMessage.textContent = "Por favor, ingrese un CVV válido (3 dígitos numéricos).";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      alert("¡Gracias por su donación!");
+      window.close();
+    });
+  });
+</script>
 
 </body>
 </html>
