@@ -59,7 +59,7 @@
             <label for="ccnum">Credit card number</label>
             <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
             <label for="expmonth">Exp Month</label>
-            <input type="text" id="expmonth" name="expmonth" placeholder="September">
+            <input type="text" id="expmonth" name="expmonth" placeholder="MM">
             <div class="row">
               <div class="col-50">
                 <label for="expyear">Exp Year</label>
@@ -73,7 +73,7 @@
           </div>
         </div>
         <label>
-          <input type="checkbox" id="donation-checkbox" name="sameadr"> ESTA SEGURO CON LA DONACIÓN
+          <input type="checkbox" id="donation-checkbox" name="donation-checkbox"> ESTA SEGURO CON LA DONACIÓN
         </label>
         <div id="error-message" class="error-message" style="display: none;"></div>
         <input type="submit" value="Continue to checkout" class="btn">
@@ -121,14 +121,15 @@
       let numeros = /^[0-9]+$/;
 
       let expYearInt = parseInt(expyear, 10);
-      if (isNaN(expYearInt) || expyear.length !== 4 || expYearInt <= 2024) {
-        errorMessage.textContent = "La fecha de vencimiento debe ser un año válido (cuatro dígitos) y mayor a 2024.";
+      if (fname === "" || email === "" || adr === "" || city === "" || state === "" || zip === "" || cname === "" || ccnum === "" || expmonth === "" || expyear === "" || cvv === "" || !checkbox.checked) {
+        errorMessage.textContent = "Por favor, complete todos los campos y marque la casilla 'Esta seguro con la donación'.";
         errorMessage.style.display = "block";
         return false;
       }
 
-      if (fname === "" || email === "" || adr === "" || city === "" || state === "" || zip === "" || cname === "" || ccnum === "" || expmonth === "" || expyear === "" || cvv === "" || !checkbox.checked) {
-        errorMessage.textContent = "Por favor, complete todos los campos y marque la casilla 'Esta seguro con la donación'.";
+
+      if (isNaN(expYearInt) || expyear.length !== 4 || expYearInt <= 2024) {
+        errorMessage.textContent = "La fecha de vencimiento debe ser un año válido (cuatro dígitos) y mayor a 2024.";
         errorMessage.style.display = "block";
         return false;
       }
