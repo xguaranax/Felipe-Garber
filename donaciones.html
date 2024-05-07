@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
   <style>
+    /* Estilos CSS aquí */
     .error-message {
       background-color: #f8d7da;
       color: #721c24;
@@ -59,11 +60,11 @@
             <label for="ccnum">Credit card number</label>
             <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
             <label for="expmonth">Exp Month</label>
-            <input type="text" id="expmonth" name="expmonth" placeholder="MM">
+            <input type="text" id="expmonth" name="expmonth" placeholder="Septiembre">
             <div class="row">
               <div class="col-50">
                 <label for="expyear">Exp Year</label>
-                <input type="text" id="expyear" name="expyear" placeholder="YYYY">
+                <input type="text" id="expyear" name="expyear" placeholder="2024">
               </div>
               <div class="col-50">
                 <label for="cvv">CVV</label>
@@ -73,7 +74,7 @@
           </div>
         </div>
         <label>
-          <input type="checkbox" id="donation-checkbox" name="donation-checkbox"> ESTA SEGURO CON LA DONACIÓN
+          <input type="checkbox" id="donation-checkbox" name="sameadr"> ESTA SEGURO CON LA DONACIÓN
         </label>
         <div id="error-message" class="error-message" style="display: none;"></div>
         <input type="submit" value="Continue to checkout" class="btn">
@@ -117,31 +118,18 @@
       let errorMessage = document.getElementById("error-message");
       errorMessage.style.display = "none";
 
-      let letras = /^[A-Za-z]+$/;
-      let numeros = /^[0-9]+$/;
-
-      let expYearInt = parseInt(expyear, 10);
+      let currentYear = new Date().getFullYear();
       if (fname === "" || email === "" || adr === "" || city === "" || state === "" || zip === "" || cname === "" || ccnum === "" || expmonth === "" || expyear === "" || cvv === "" || !checkbox.checked) {
         errorMessage.textContent = "Por favor, complete todos los campos y marque la casilla 'Esta seguro con la donación'.";
         errorMessage.style.display = "block";
         return false;
       }
 
-
-      if (isNaN(expYearInt) || expyear.length !== 4 || expYearInt <= 2024) {
-        errorMessage.textContent = "La fecha de vencimiento debe ser un año válido (cuatro dígitos) y mayor a 2024.";
-        errorMessage.style.display = "block";
-        return false;
-      }
+      let letras = /^[A-Za-z]+$/;
+      let numeros = /^[0-9]+$/;
 
       if (!letras.test(fname)) {
         errorMessage.textContent = "Por favor, ingrese solo letras en el nombre.";
-        errorMessage.style.display = "block";
-        return false;
-      }
-
-      if (!letras.test(cname)) {
-        errorMessage.textContent = "Por favor, ingrese solo letras en el nombre de la tarjeta.";
         errorMessage.style.display = "block";
         return false;
       }
@@ -170,7 +158,13 @@
         return false;
       }
 
-      alert("¡Gracias por su donación!");
+      if (expyear.length !== 4 || !numeros.test(expyear) || expyear <= currentYear) {
+        errorMessage.textContent = "Por favor, ingrese un año de expiración válido y mayor que el año actual.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+
+      alert("Gracias por su donación.");
       window.close();
     });
   });
