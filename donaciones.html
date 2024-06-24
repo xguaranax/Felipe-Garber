@@ -63,9 +63,6 @@
             </div>
           </div>
         </div>
-        <label>
-          <input type="checkbox" id="donation-checkbox" name="sameadr"> ESTA SEGURO CON LA DONACIÓN
-        </label>
         <div id="error-message" class="error-message" style="display: none;"></div>
         <input type="submit" value="Continue to checkout" class="btn">
       </form>
@@ -73,14 +70,15 @@
   </div>
   <div class="col-25">
     <div class="container">
-      <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i> <b>4</b></span></h4>
-      <p><a href="#">Ruedas</a> <span class="price">$144.99</span></p>
-      <p><a href="#">Pintura</a> <span class="price">$114.99</span></p>
-      <p><a href="#">Motor</a> <span class="price">$149.99</span></p>
-      <p><a href="#">Turbo</a> <span class="price">$89.99</span></p>
-      <p><a href="#">IVA</a> <span class="price">$0,03</p>
-      <hr>
-      <p>Total <span class="price" style="color:black"><b>USD499,99</b></span></p>
+      <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i> <b id="total-items">0</b></span></h4>
+      <form id="cart-form">
+        <p><label><input type="checkbox" class="product-checkbox" data-price="144.99"> Ruedas <span class="price">$144.99</span></label></p>
+        <p><label><input type="checkbox" class="product-checkbox" data-price="114.99"> Pintura <span class="price">$114.99</span></label></p>
+        <p><label><input type="checkbox" class="product-checkbox" data-price="149.99"> Motor <span class="price">$149.99</span></label></p>
+        <p><label><input type="checkbox" class="product-checkbox" data-price="89.99"> Turbo <span class="price">$89.99</span></label></p>
+        <hr>
+        <p>Total <span class="price" style="color:black"><b id="total-amount">USD0.00</b></span></p>
+      </form>
     </div>
   </div>
 </div>
@@ -88,8 +86,11 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     let form = document.getElementById("donation-form");
-    let checkbox = document.getElementById("donation-checkbox");
+    let productCheckboxes = document.querySelectorAll(".product-checkbox");
+    let totalItems = document.getElementById("total-items");
+    let totalAmount = document.getElementById("total-amount");
     
+    // Event listener for form submission
     form.addEventListener("submit", function(event) {
       event.preventDefault();
 
@@ -109,8 +110,8 @@
       errorMessage.style.display = "none";
 
       let currentYear = new Date().getFullYear();
-      if (fname === "" || email === "" || adr === "" || city === "" || state === "" || zip === "" || cname === "" || ccnum === "" || expmonth === "" || expyear === "" || cvv === "" || !checkbox.checked) {
-        errorMessage.textContent = "Por favor, complete todos los campos y marque la casilla 'Esta seguro con la donación'.";
+      if (fname === "" || email === "" || adr === "" || city === "" || state === "" || zip === "" || cname === "" || ccnum === "" || expmonth === "" || expyear === "" || cvv === "") {
+        errorMessage.textContent = "Por favor, complete todos los campos.";
         errorMessage.style.display = "block";
         return false;
       }
@@ -157,6 +158,43 @@
       alert("Gracias por su donación.");
       window.close();
     });
+
+    // Event listeners for product checkboxes
+    productCheckboxes.forEach(function(checkbox) {
+      checkbox.addEventListener("change", function() {
+        updateCart();
+      });
+    });
+
+    // Function to update cart based on checkbox selections
+    function updateCart() {
+      let selectedItems = document.querySelectorAll(".product-checkbox:checked");
+      let total = 0;
+      let itemsCount = selectedItems.length;
+
+      selectedItems.forEach(function(item) {
+        let price = parseFloat(item.dataset.price);
+        total += price;
+      });
+
+      let iva = total * 0.1; // Calculate 10% IVA
+
+      // Update cart display
+      totalAmount.textContent = "USD" + total.toFixed(2);
+      totalItems.textContent = itemsCount;
+
+      // Create or update IVA display
+      let ivaElement = document.getElementById("iva-item");
+      if (!ivaElement) {
+        ivaElement = document.createElement("p");
+        ivaElement.id = "iva-item";
+        ivaElement.innerHTML = "<span>IVA (10%):</span> <span class='price' style='float:right;'>USD" + iva.toFixed(2) + "</span>";
+        let cartForm = document.getElementById("cart-form");
+        cartForm.insertBefore(ivaElement, cartForm.querySelector("hr"));
+      } else {
+        ivaElement.innerHTML = "<span>IVA (10%):</span> <span class='price' style='float:right;'>USD" + iva.toFixed(2) + "</span>";
+      }
+    }
   });
 </script>
 
